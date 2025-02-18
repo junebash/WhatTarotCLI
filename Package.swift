@@ -4,18 +4,38 @@
 import PackageDescription
 
 let package = Package(
-    name: "WhatTarotCLI",
-    dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.2.0"),
-    ],
-    targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .executableTarget(
-            name: "WhatTarotCLI",
-            dependencies: [
-                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ]
-        ),
-    ]
+  name: "WhatTarotCLI",
+  platforms: [.macOS(.v15)],
+  dependencies: [
+    .package(
+      url: "https://github.com/apple/swift-argument-parser.git",
+      .upToNextMajor(from: Version(1, 2, 0))
+    ),
+    .package(
+      url: "https://github.com/apple/swift-algorithms",
+      .upToNextMajor(from: Version(1, 0, 0))
+    ),
+    .package(
+      url: "https://github.com/pointfreeco/swift-clocks",
+      .upToNextMajor(from: Version(1, 0, 0))
+    )
+  ],
+  targets: [
+    .executableTarget(
+      name: "WhatTarotCLI",
+      dependencies: [
+        .product(name: "Algorithms", package: "swift-algorithms"),
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        .product(name: "Clocks", package: "swift-clocks"),
+      ],
+      resources: [.process("Resources/tarot.json")]
+    ),
+    .testTarget(
+      name: "Tests",
+      dependencies: [
+        "WhatTarotCLI"
+      ],
+      path: "Tests"
+    )
+  ]
 )
